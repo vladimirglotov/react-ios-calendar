@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import moment from 'moment';
+import { Header } from './components/Header';
+import { Monitor } from './components/Monitor';
+import { Calendargrid } from './components/CalendarGrid';
+import styled from 'styled-components';
 
 function App() {
+  moment.updateLocale('en',{week:{dow: 1}});
+
+  const [today, setToday] = useState(moment());
+  const startDay = moment().startOf('month').startOf('week');
+
+  const prevHandler = () => {
+    setToday(prev => prev.clone().subtract(1, 'month'))
+  }
+  const todayHandler = () => {
+    setToday(moment())
+  }
+  const nextHandler = () => {
+    setToday(prev => prev.clone().add(1, 'month'))
+  }
+
+  const ShadowWrapper = styled.div`
+    border-radius: 8px;
+    padding 0;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px #1A1A1A, 0 8px 20px 6px #888;
+  `
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ShadowWrapper>
+      <Header/>
+      <Monitor
+        prevHandler={prevHandler}
+        todayHandler={todayHandler}
+        nextHandler={nextHandler}
+        today={today}
+
+      />
+     <Calendargrid startDay={startDay}/>
+    </ShadowWrapper>
   );
 }
 
